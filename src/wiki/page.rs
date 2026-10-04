@@ -54,7 +54,7 @@ impl Default for WikiPage {
 ///
 /// Returns an error when frontmatter exists but is not valid YAML.
 pub fn parse_page(content: &str) -> Result<WikiPage, serde_yaml::Error> {
-    if !content.starts_with("---\n") {
+    if !content.starts_with("---\n") && !content.starts_with("---\r\n") {
         return Ok(WikiPage {
             body: content.to_string(),
             version: 0,
@@ -138,4 +138,21 @@ fn default_status() -> String {
 
 fn default_page_type() -> String {
     "concept".to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::parse_page;
+
+    #[test]
+    fn parses_windows_crlf_frontmatter() {
+        let page = parse_page(
+            "---\r\ntitle: Momentum Factor\r\ntype: factor\r\n---\r\n\r\n# Momentum\r\n",
+        )
+        .expect("valid YAML frontmatter");
+
+        assert_eq!(page.title, "Momentum Factor");
+        assert_eq!(page.page_type, "factor");
+        assert_eq!(page.body, "# Momentum\n");
+    }
 }

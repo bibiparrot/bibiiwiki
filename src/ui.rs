@@ -6923,7 +6923,7 @@ mod tests {
     use egui_kittest::kittest::{NodeT as _, Queryable as _};
 
     fn test_app() -> BibiiWikiApp {
-        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("wiki_root");
+        let root = public_wiki_fixture();
         let mut persisted = PersistedState::default();
         persisted.ensure_workspace(root);
         BibiiWikiApp::from_state(
