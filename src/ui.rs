@@ -9223,7 +9223,7 @@ save_memory = true
                 .is_some()
         );
         harness.get_by_label("Continue ingest").click();
-        harness.run();
+        harness.run_steps(2);
         let args = args_rx
             .recv_timeout(Duration::from_secs(5))
             .expect("Continue should launch the CLI");
