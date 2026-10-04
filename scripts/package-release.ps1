@@ -5,7 +5,7 @@ $root = Split-Path -Parent $PSScriptRoot
 Set-Location -LiteralPath $root
 
 $manifest = Get-Content -LiteralPath 'Cargo.toml' -Raw
-if ($manifest -notmatch '(?m)^version = "(\d+\.\d+\.\d+)"$') {
+if ($manifest -notmatch '(?m)^version = "(\d+\.\d+\.\d+)"\r?$') {
     throw 'Could not read the package version from Cargo.toml'
 }
 $packageVersion = $Matches[1]
