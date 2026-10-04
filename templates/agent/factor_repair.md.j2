@@ -1,0 +1,22 @@
+# 因子表达式修复 (Factor Expression Repair)
+
+Round: {{ request.round_number }}
+Allowed data columns: {{ request.allowed_columns | join(", ") }}
+
+Repair the proposal after the exact validation, calculation, or backtest error
+below. Preserve its economic mechanism unless the error proves the mechanism
+cannot be represented with the allowed data. Change only what is needed, keep
+time-series operations grouped by `asset_code`, use no look-ahead data, and
+preserve natural rolling-window nulls without `fill_null`. Treat `date` and
+`asset_code` as structural keys, not required market-data inputs. Then
+return only the requested structured output.
+
+## Failed Proposal
+
+```json
+{{ proposal_json }}
+```
+
+## Exact Error
+
+{{ error }}

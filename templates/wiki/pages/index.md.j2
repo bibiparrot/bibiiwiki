@@ -1,0 +1,5 @@
+{% for group, entries in groups %}## {{ group | replace('_', ' ') | title }}
+
+{% for target, title, description in entries %}- [[{{ target }}|{{ title }}]] — {{ description }}
+{% endfor %}
+{% endfor %}

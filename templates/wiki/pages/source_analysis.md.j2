@@ -1,0 +1,24 @@
+## 摘要 (Summary)
+
+{{ analysis.summary }}
+
+## 关键概念 (Key Concepts)
+
+{% for value in analysis.key_concepts %}- {{ value.name.title }}: {{ value.definition }}
+{% endfor %}
+## 主要论点与发现 (Main Arguments & Findings)
+
+{% for value in analysis.findings %}- {{ value }}
+{% endfor %}
+## 与现有 Wiki 的连接 (Connections to Existing Wiki)
+
+{% for value in analysis.connections %}- {{ value }}
+{% endfor %}
+## 矛盾与张力 (Contradictions & Tensions)
+
+{% for value in analysis.tensions %}- {{ value }}
+{% endfor %}
+## 建议 (Recommendations)
+
+{% for value in analysis.recommendations %}- {{ value }}
+{% endfor %}

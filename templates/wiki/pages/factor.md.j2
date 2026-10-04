@@ -1,0 +1,72 @@
+## 因子定义 (Definition)
+
+{% if factor.descriptions %}{{ factor.descriptions | join('\n\n') }}{% else %}Definition requires review.{% endif %}
+
+English names: {{ factor.english_names | join(', ') if factor.english_names else 'None' }}
+
+Chinese names: {{ factor.chinese_names | join(', ') if factor.chinese_names else 'None' }}
+
+Categories: {{ factor.categories | join(', ') if factor.categories else 'Uncategorized' }}
+
+## 因子公式 (Formula)
+
+Variant status: `{{ factor.variant_status }}`
+
+{% if factor.canonical_variant %}Canonical variant: {{ factor.canonical_variant }}.
+{% else %}Canonical variant: none; calculation and backtesting are blocked pending review.
+{% endif %}
+
+{% for variant in factor.formulas %}
+### 变体 {{ loop.index }} (Variant {{ loop.index }})
+
+Expression: `{{ variant.value.markdown }}`
+
+$$
+{{ variant.value.latex }}
+$$
+
+Status: `{{ variant.value.status }}`
+
+Sources: {% for source in variant.sources %}`{{ source }}`{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% endfor %}
+## 表达式变体 (Expression Variants) - Polars
+
+{% if factor.expressions %}
+{% for variant in factor.expressions %}
+### 变体 {{ loop.index }} (Variant {{ loop.index }})
+
+```python
+{{ variant.expression }}
+```
+
+Sources: {% for source in variant.sources %}`{{ source }}`{% if not loop.last %}, {% endif %}{% endfor %}
+
+{% endfor %}
+{% else %}No reviewed executable Polars expression is available.
+{% endif %}
+## 所需输入 (Required Inputs)
+
+{% if factor.required_inputs %}{% for value in factor.required_inputs %}- {{ value }}
+{% endfor %}{% else %}- Not documented.
+{% endif %}
+## 适用场景 (Applicable Scenarios)
+
+{% if factor.scenarios %}{% for value in factor.scenarios %}- {{ value }}
+{% endfor %}{% else %}- Not documented.
+{% endif %}
+## 因子评价 (Evaluation)
+
+{% if factor.evaluations %}{% for value in factor.evaluations %}- Catalog claim (unverified; no backtest evidence): {{ value }}
+{% endfor %}{% else %}- Not documented.
+{% endif %}
+## 相似因子 (Similar Factors)
+
+{% if factor.similar_factors %}{% for item in factor.similar_factors %}- [[factors/{{ item.slug }}|{{ item.title }}]] — {{ item.reason }} (score: {{ '%.2f' | format(item.score) }})
+{% endfor %}{% else %}- No high-confidence similar factor identified.
+{% endif %}
+## 来源 (Sources)
+
+{% if factor.sources %}{% for source in factor.sources %}- `{{ source }}`
+{% endfor %}{% else %}- Not documented.
+{% endif %}

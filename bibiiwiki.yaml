@@ -1,0 +1,36 @@
+# Default local development stack:
+#   Codex -> BIBIIWIKI Responses proxy (127.0.0.1:4000/v1)
+#         -> Ollama OpenAI-compatible API (127.0.0.1:11434/v1)
+server:
+  bind: 127.0.0.1:4000
+  request_timeout_seconds: 600
+  default_max_output_tokens: 8192
+
+model_list:
+  - model_name: ornith-1.5:9b
+    litellm_params:
+      model: ollama/ornith-1.5:9b
+      api_base: http://127.0.0.1:11434/v1
+
+# Markdown-aware semantic extraction limits. These conservative character
+# counts intentionally leave room for prompts, schemas, output, and multilingual
+# tokenization instead of trying to fill each model's full context window.
+# Keys may be exact deployment aliases/provider IDs or provider-model prefixes.
+chunking:
+  default_max_characters: 10000
+  model_max_characters:
+    "ornith-1.5": 10000       # 256K context; local latency/reliability preset
+    "qwen3": 12000            # 32K native context preset
+    "deepseek-chat": 24000    # 64K context preset
+    "deepseek-reasoner": 24000
+    "deepseek-v4-flash": 24000
+    "deepseek-v4-pro": 24000
+    "gpt-5.6": 64000          # 1.05M context preset
+    "claude-sonnet-5": 64000  # 1M context preset
+    "gemini-2.5": 64000       # 1M context preset
+
+codex:
+  binary: codex
+  model: ornith-1.5:9b
+  # This model exposes completion/vision, not a separate thinking capability.
+  reasoning_effort: none

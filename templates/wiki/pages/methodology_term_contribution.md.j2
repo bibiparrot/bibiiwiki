@@ -1,0 +1,6 @@
+### 来源：{{ source_name.chinese }} (Source: {{ source_name.english }})
+
+- Source: [[{{ source_page_target }}|{{ source_name.title }}]]
+{% if evidence %}{% for value in evidence %}- {{ value }}
+{% endfor %}{% else %}- Not specified in this source.
+{% endif %}

@@ -1,0 +1,68 @@
+[package]
+name = "bibiiwiki"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.88"
+build = "build.rs"
+description = "A LiteLLM Rust gateway and Codex adapter for an intelligent LLM wiki"
+license = "GPL-3.0-only"
+
+[dependencies]
+anyhow = "1.0"
+anydoc = "0.2.4"
+axum = "0.8"
+calamine = "0.36.1"
+chrono = { version = "0.4.42", default-features = false, features = ["clock", "std"] }
+clap = { version = "4.5", features = ["derive"] }
+csv = "1.4.0"
+eframe = { version = "0.32.3", default-features = false, features = ["accesskit", "default_fonts", "glow", "persistence"] }
+egui_commonmark = { version = "=0.21.1", default-features = false }
+egui_extras = { version = "0.32.3", features = ["svg"] }
+futures-util = "0.3"
+grep-regex = "=0.1.14"
+grep-searcher = "=0.1.17"
+ignore = "=0.4.29"
+include_dir = "0.7.4"
+litellm-core = { path = "vendor/litellm-core" }
+minijinja = { version = "2.24.0", features = ["json", "loader"] }
+open = "5.4.1"
+pdf-extract = "0.12.0"
+pictogram = { version = "0.3.0", default-features = false, features = ["font-awesome"] }
+reqwest = { version = "0.12", default-features = false, features = ["json", "rustls-tls"] }
+rfd = "0.17.2"
+rust-i18n = "4.2.1"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+sha2 = "0.10"
+sys-locale = "0.3.2"
+tantivy = "0.26.1"
+text-splitter = { version = "0.32.0", features = ["markdown"] }
+thiserror = "2.0"
+tokio = { version = "1", features = ["fs", "io-util", "macros", "net", "process", "rt-multi-thread", "signal", "sync", "time"] }
+tokio-stream = "0.1"
+toml = "1.0"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+url = "2.5"
+yaml-edit = "0.3.0"
+ratatui = { version = "0.29.0", default-features = false }
+ansi-to-tui = "=7.0.0"
+
+[dev-dependencies]
+egui_kittest = { version = "0.32.3", features = ["wgpu"] }
+http-body-util = "0.1"
+tower = { version = "0.5", features = ["util"] }
+
+[target.'cfg(windows)'.dependencies]
+windows-sys = { version = "0.61.2", features = ["Win32_Storage_FileSystem", "Win32_System_Console"] }
+
+[build-dependencies]
+winresource = "0.1.31"
+
+[lints.rust]
+unsafe_code = "warn"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"

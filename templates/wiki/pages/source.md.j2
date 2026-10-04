@@ -1,0 +1,24 @@
+{{ analysis_markdown }}
+
+## 来源追溯 (Provenance)
+
+- SHA-256: `{{ sha256 }}`
+- Extractor: `{{ extractor }}`
+- Pages: {{ page_count }}
+- Raw backup: `{{ raw_backup }}`
+- Raw extraction: `../../raw/extracted/{{ sidecar_name }}`
+{% if methodology_target %}- Methodology: [[{{ methodology_target }}|{{ methodology_title }}]]
+{% endif %}
+{% if pending_extracted_text %}
+## 待分析的完整提取文本 (Complete Extracted Text Pending Analysis)
+
+The structured semantic pass did not finish. This preserved extraction remains searchable and can be reprocessed safely.
+
+{{ pending_extracted_text }}
+{% endif %}
+{% if component_targets %}
+## 知识组件 (Knowledge Components)
+
+{% for target in component_targets %}- [[{{ target }}]]
+{% endfor %}
+{% endif %}

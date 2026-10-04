@@ -1,0 +1,68 @@
+# Default local development stack:
+#   Codex -> BIBIIWIKI Responses proxy (127.0.0.1:4000/v1)
+#         -> Ollama OpenAI-compatible API (127.0.0.1:11434/v1)
+server:
+  bind: 127.0.0.1:4000
+  request_timeout_seconds: 600
+  default_max_output_tokens: 8192
+  # Optional. Required before binding the proxy beyond loopback.
+  # api_key_env: BIBIIWIKI_PROXY_KEY
+
+model_list:
+  - model_name: ornith-1.5:9b
+    litellm_params:
+      model: ollama/ornith-1.5:9b
+      api_base: http://127.0.0.1:11434/v1
+
+  # Alternative native LiteLLM Rust Messages path:
+  # - model_name: claude
+  #   litellm_params:
+  #     model: anthropic/claude-sonnet-4-5
+  #     api_key: os.environ/ANTHROPIC_API_KEY
+
+# Markdown-aware semantic extraction limits. These are conservative character
+# budgets for reliable structured extraction, not raw provider token limits.
+# Keys may be exact deployment aliases/provider IDs or provider-model prefixes.
+chunking:
+  default_max_characters: 10000
+  model_max_characters:
+    "ornith-1.5": 10000       # 256K context; local latency/reliability preset
+    "qwen3": 12000            # 32K native context preset
+    "deepseek-chat": 24000    # 64K context preset
+    "deepseek-reasoner": 24000
+    "deepseek-v4-flash": 24000
+    "deepseek-v4-pro": 24000
+    "gpt-5.6": 64000          # 1.05M context preset
+    "claude-sonnet-5": 64000  # 1M context preset
+    "gemini-2.5": 64000       # 1M context preset
+
+codex:
+  binary: codex
+  model: ornith-1.5:9b
+  # Set higher only for models whose Ollama metadata advertises thinking.
+  reasoning_effort: none
+
+# BIBIIWIKI maintains this section in ~/.bibiiwik/bibiiwiki.yaml. The complete shape is
+# shown here for discoverability; first launch fills it from safe defaults and
+# migrates any prior desktop state.
+local:
+  theme: light
+  # system follows the operating-system BCP 47 locale. Explicit values:
+  # en, zh-cn, ja, la, ko, ru, fr, es.
+  locale: system
+  toolbar_visible: true
+  workspace_dock_visible: true
+  search_dock_visible: true
+  query_dock_visible: true
+  bottom_dock_visible: true
+  inspector_visible: false
+  inspector: tasks
+  workspaces: []
+  selected_workspace: 0
+  workspace_sort: name
+  source_dir: wiki_sources
+  agent_workspace: .
+  force_ingest: false
+  search_limit: 10
+  query_uses_llm: true
+  save_query_memory: true

@@ -1,0 +1,15 @@
+server:
+  bind: 127.0.0.1:0
+  request_timeout_seconds: 30
+  default_max_output_tokens: 1024
+
+model_list:
+  - model_name: mock-coder
+    litellm_params:
+      model: openai/mock-coder
+      api_base: http://127.0.0.1:4010/v1
+
+codex:
+  binary: codex
+  model: mock-coder
+

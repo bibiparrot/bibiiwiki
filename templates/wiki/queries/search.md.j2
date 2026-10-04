@@ -1,0 +1,18 @@
+## 检索词 (Keyword)
+
+{{ keyword }}
+
+## 检索结果 (Search Results)
+
+{% for hit in hits %}### {{ loop.index }}. {{ hit.title }}
+
+- Page: [[{{ hit.path | replace('.md', '') }}|{{ hit.title }}]]
+- Score: `{{ hit.score }}`
+- Excerpt: {{ hit.excerpt }}
+
+{% else %}- 未找到匹配页面 (No matching pages found).
+{% endfor %}
+## 知识边界 (Knowledge Boundary)
+
+本页面保存确定性本地检索结果，不包含模型推断。结果仅反映保存时的 Wiki 状态。
+

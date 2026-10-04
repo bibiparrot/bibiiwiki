@@ -1,0 +1,16 @@
+# 目的 (Purpose)
+
+This repository is an llm_wiki-centered platform for automatic factor-based investment. It converts source documents to Markdown with AnyDoc, then turns that source material into durable, linked investment knowledge used to propose, calculate, review, and backtest factor expressions.
+
+## 运行循环 (Operating Loop)
+
+1. Preserve every input document byte-for-byte under `raw/sources/`.
+2. Convert every supported input to Markdown under `wiki/sources/`, then analyze those pages with the configured LLM Wiki prompt.
+3. Extract source-backed investment philosophies, universes, decision rules, portfolio and risk construction, horizons, execution, monitoring, and review methodologies.
+4. Consolidate duplicate factor definitions while preserving formula and expression variants.
+5. Link related factors, methodologies, evidence, and backtest experience.
+6. Run factor calculation and backtesting through auditable control-plane goals and todos.
+7. Write evidence and outcomes back into the wiki without silently overwriting active pages.
+8. Analyze news from macro logic through industry transmission and fundamental valuation, publishing only evidence-complete opportunities that pass deterministic catalyst and valuation gates.
+
+The wiki is the system's long-lived white knowledge and memory. Generated claims must remain traceable to sources, derived formulas must be labeled, unknowns must be explicit, and human-approved active content has authority over automated updates.

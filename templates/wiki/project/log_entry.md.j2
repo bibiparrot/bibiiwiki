@@ -1,0 +1,13 @@
+## [{{ event_date }}] 摄取批次 (Ingest | Invest LoopX Batch)
+
+<!-- event:{{ stats.event_id }} -->
+{% if source_titles %}- Sources:
+{% for title in source_titles %}  - {{ title }}
+{% endfor %}{% else %}- Sources: none
+{% endif %}- Sources copied: {{ stats.sources_copied }}
+- Sources analyzed: {{ stats.sources_analyzed }}
+- Sources pending analysis: {{ stats.sources_pending_analysis }}
+- Methodology pages: {{ methodology_pages }}
+- Merged factors: {{ stats.merged_factors }}
+- Derived formulas: {{ stats.derived_formulas }}
+- Similarity links: {{ stats.similarity_links }}

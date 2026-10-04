@@ -1,0 +1,19 @@
+## 转换后的 Markdown (Converted Markdown)
+
+{{ converted_markdown }}
+
+## LLM Wiki 分析 (LLM Wiki Analysis)
+
+{% if pending_analysis %}> Semantic analysis is pending. The AnyDoc conversion above remains available and searchable.
+{% else %}{{ analysis_markdown }}
+{% endif %}
+## 生成的知识页面 (Generated Knowledge Pages)
+
+- Methodology: [[{{ methodology_target }}|{{ methodology_title }}]]
+{% for target in component_targets %}- [[{{ target }}]]
+{% endfor %}
+## 来源 (Provenance)
+
+- Original: `../../{{ raw_backup }}`
+- SHA-256: `{{ sha256 }}`
+- Converter: `{{ extractor }}`

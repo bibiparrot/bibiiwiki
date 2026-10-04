@@ -1,0 +1,11 @@
+本组件收录{{ scope }}。
+
+## 使用规则 (Usage Rules)
+
+- 每个页面必须保持明确主题边界，并使用 `sources` 记录来源。
+- 使用正文中的双向链接语法建立连接（例如路径 `concepts/example` 与显示标题），聚合导航由应用维护。
+- 自动生成内容保持 `draft`，人工确认内容使用 `active`。
+{% if directory == 'queries' %}- 检索页面使用 `type: search`，综合问答页面使用 `type: query`。
+{% elif directory == 'media' %}- 原始文档保存在 `../../raw/sources/`，媒体页面记录其源文档。
+{% elif directory == 'opportunities' %}- 只有通过新闻催化与低估值双重门槛的候选机会才生成独立页面。
+{% endif %}

@@ -1,0 +1,11 @@
+## 回测评估 (Backtest Evaluations)
+
+| Metric | Value |
+| --- | ---: |
+{% for name, value in metrics %}| {{ name }} | {{ value }} |
+{% endfor %}
+Decision: {{ verdict }} (`{{ reason_code }}`)
+
+Observations: {{ observations }}
+
+Evidence: `{{ evidence_id }}`

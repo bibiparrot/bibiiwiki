@@ -1,0 +1,47 @@
+# 批量因子提议 (Batch Factor Proposal)
+
+Round: {{ request.round_number }}
+Batch size: {{ request.batch_size }}
+Objective: {{ request.objective }}
+Allowed data columns: {{ request.allowed_columns | join(", ") }}
+
+Propose exactly {{ request.batch_size }} distinct, testable factors. Ground the
+research direction in the supplied wiki memory and improve on prior empirical
+results. Diversify mechanism families rather than changing only one window.
+
+Every expression must:
+
+- use only `pl.col`, numeric/string literals, arithmetic, and these supported
+  methods: `abs`, `clip`, `diff`, `fill_nan`, `log`, `over`,
+  `pct_change`, `rank`, `rolling_max`, `rolling_mean`, `rolling_median`,
+  `rolling_min`, `rolling_std`, `rolling_sum`, `shift`, `sign`, `sqrt`;
+- use only the allowed data columns plus `asset_code` inside `over`;
+- use literal positive window sizes;
+- express negation as multiplication by `-1`, not unary minus;
+- avoid imports, assignments, lambdas, arbitrary Python, look-ahead shifts,
+  and duplicate names or expressions;
+- group time-series operations with `.over('asset_code')`.
+- preserve rolling-window warm-up nulls; never use `fill_null`, because the
+  evaluator filters natural warm-up observations before cross-sectional tests;
+- use prior holdout, direction-consistency, acceptability, turnover, and
+  drawdown evidence when available, not only full-sample IC and ICIR;
+- avoid algebraic renaming, exact sign flips, and small parent-factor gates
+  unless the proposal states a genuinely testable incremental mechanism.
+
+Return only the requested structured output.
+
+## Wiki Memory
+
+{{ request.wiki_context }}
+
+## Prior Round Results
+
+```json
+{{ prior_results_json }}
+```
+
+## Existing Identities
+
+```json
+{{ existing_identities_json }}
+```

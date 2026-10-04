@@ -1,0 +1,17 @@
+## 问题 (Question)
+
+{{ question }}
+
+## 回答 (Answer)
+
+{{ answer }}
+
+## 证据页面 (Evidence Pages)
+
+{% for hit in hits %}- [[{{ hit.path | replace('.md', '') }}|{{ hit.title }}]] (score: `{{ hit.score }}`)
+{% else %}- 无可用 Wiki 证据 (No wiki evidence available).
+{% endfor %}
+## 知识边界 (Knowledge Boundary)
+
+回答必须以以上 Wiki 页面为依据；未被证据支持的内容应明确标记为知识缺口。
+

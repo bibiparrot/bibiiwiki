@@ -1,0 +1,5 @@
+{% if hits %}本地 Wiki 匹配结果 (Local wiki matches):
+
+{% for hit in hits %}- [[{{ hit.path | replace('.md', '') }}|{{ hit.title }}]]: {{ hit.excerpt }}
+{% endfor %}{% else %}Wiki 中没有找到可支持此问题的页面 (No supporting wiki pages were found).
+{% endif %}
