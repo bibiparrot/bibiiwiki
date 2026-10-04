@@ -1,0 +1,110 @@
+name: Cross-platform build and release
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: windows-2025
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+      - name: Run tests
+        run: cargo test --locked --all-targets
+
+  desktop:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: windows-2025
+            platform: windows-x86_64
+          - runner: macos-15-intel
+            platform: x86_64-macOS
+          - runner: macos-latest
+            platform: arm64-macOS
+          - runner: ubuntu-22.04
+            platform: linux-x86_64
+          - runner: ubuntu-22.04-arm
+            platform: linux-aarch64
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Install Linux build and packaging dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev libxkbcommon-dev libwayland-dev libasound2-dev rpm desktop-file-utils
+      - name: Build release executable
+        run: cargo build --locked --release --bin bibiiwiki
+      - name: Package Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: ./scripts/package-release.ps1
+      - name: Package macOS or Linux
+        if: runner.os != 'Windows'
+        shell: bash
+        run: bash scripts/package-release.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: desktop-${{ matrix.platform }}
+          path: |
+            dist/*.zip
+            dist/*.dmg
+            dist/*.pkg
+            dist/*.tar.gz
+            dist/*.rpm
+            dist/*.AppImage
+          if-no-files-found: error
+
+  publish-release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [verify, desktop]
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: desktop-*
+          path: dist
+          merge-multiple: true
+      - name: Verify all packages and publish
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version=${GITHUB_REF_NAME#v}
+          grep -qx "version = \"$version\"" Cargo.toml
+          for suffix in \
+            arm64-macOS.dmg arm64-macOS.pkg arm64-macOS.zip \
+            linux-aarch64.AppImage linux-aarch64.rpm linux-aarch64.tar.gz \
+            linux-x86_64.AppImage linux-x86_64.rpm linux-x86_64.tar.gz \
+            windows-x86_64.zip \
+            x86_64-macOS.dmg x86_64-macOS.pkg x86_64-macOS.zip; do
+            test -s "dist/bibiiwiki-$version-$suffix"
+          done
+          (cd dist && sha256sum bibiiwiki-* > SHA256SUMS)
+          gh release create "$GITHUB_REF_NAME" \
+            dist/bibiiwiki-"$version"-* dist/SHA256SUMS \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "BIBIIWIKI $GITHUB_REF_NAME" \
+            --generate-notes \
+            --verify-tag

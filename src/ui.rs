@@ -10006,6 +10006,63 @@ save_memory = true
     }
 
     #[test]
+    #[ignore = "generates public README screenshots from examples/demo-wiki"]
+    fn capture_public_readme_screenshots() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("examples")
+            .join("demo-wiki");
+        let output = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("assets")
+            .join("screenshots");
+        fs::create_dir_all(&output).expect("create screenshot output directory");
+
+        let mut persisted = PersistedState::default();
+        persisted.ensure_workspace(root.clone());
+        persisted.bottom_dock_visible = false;
+        persisted.query_dock_visible = false;
+        persisted.markdown_editor_mode = EditorMode::Preview;
+        let mut app = BibiiWikiApp::from_state(
+            persisted,
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("bibiiwiki.yaml"),
+        );
+        app.search_query = "momentum".to_owned();
+        app.run_search();
+        app.open_markdown_file(root.clone(), root.join("wiki/factors/momentum.md"));
+        let mut harness = Harness::builder()
+            .with_size(Vec2::new(1_600.0, 900.0))
+            .build_state(|ctx, app: &mut BibiiWikiApp| app.render(ctx), app);
+        egui_extras::install_image_loaders(&harness.ctx);
+        harness.run_steps(2);
+        harness
+            .render()
+            .expect("render public workspace screenshot")
+            .save(output.join("workspace.png"))
+            .expect("save public workspace screenshot");
+
+        let mut persisted = PersistedState::default();
+        persisted.ensure_workspace(root);
+        persisted.bottom_dock_visible = false;
+        persisted.search_dock_visible = false;
+        persisted.query_dock_visible = false;
+        let app = BibiiWikiApp::from_state(
+            persisted,
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("bibiiwiki.yaml"),
+        );
+        let mut harness = Harness::builder()
+            .with_size(Vec2::new(1_200.0, 760.0))
+            .build_state(|ctx, app: &mut BibiiWikiApp| app.render(ctx), app);
+        egui_extras::install_image_loaders(&harness.ctx);
+        harness.run();
+        harness.get_by_label("Ingest dock").click();
+        harness.run_steps(2);
+        harness
+            .render()
+            .expect("render public ingest screenshot")
+            .save(output.join("ingest.png"))
+            .expect("save public ingest screenshot");
+    }
+
+    #[test]
     #[ignore = "writes the focused visual-QA capture requested by BIBIIWIKI_SEARCH_EDITOR_QA_CAPTURE"]
     fn capture_search_result_markdown_editor_for_visual_qa() {
         let root = Path::new(env!("CARGO_MANIFEST_DIR"))
